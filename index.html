@@ -1,0 +1,203 @@
+<!doctype html>
+<!-- Copyright (c) 2025 Oracle and/or its affiliates.
+     Licensed under the Universal Permissive License (UPL), Version 1.0.
+     See the LICENSE file in the migration_decision_models repository. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compare offline and online database migration using downtime, throughput, change capture and rollback requirements.">
+<title>Database Migration Calculator | OraMatt</title>
+<style>
+:root{--ink:#252522;--muted:#66665f;--paper:#f6f5f1;--card:#fff;--line:#dfdfd7;--red:#a83228;--soft:#f7e8e5;--green:#226549;--amber:#795613}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}a{color:var(--red)}header{background:#252522;color:#fff}header .bar{max-width:1200px;margin:auto;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-size:21px;font-weight:750;letter-spacing:-.5px}.brand span{color:#ec9187}header a{color:#eee;text-decoration:none;font-size:14px}main{max-width:1200px;margin:auto;padding:30px 24px 48px}.eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:1.7px;color:var(--red);font-weight:750}h1{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-1.1px;margin:8px 0 14px}h2{font-size:21px;line-height:1.35;margin:0 0 10px}h3{font-size:17px;margin:18px 0 10px}p{margin:8px 0 14px}.intro{max-width:850px;color:var(--muted)}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:24px 0}.tabs{display:inline-flex;padding:4px;background:#e8e7df;border-radius:10px}.tabs button{border:0;background:transparent;border-radius:7px;padding:10px 20px;cursor:pointer;color:var(--muted);font-weight:650}.tabs button[aria-selected=true]{background:#fff;color:var(--red);box-shadow:0 1px 3px #0002}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{padding:9px 13px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer;font-size:14px}.actions button:hover{border-color:var(--red)}.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr);gap:22px;align-items:start}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}.section-head{display:flex;gap:12px;align-items:flex-start}.step{flex:none;background:var(--soft);color:var(--red);font-size:13px;font-weight:700;min-width:30px;height:30px;border-radius:50%;display:grid;place-items:center}.caption{color:var(--muted);font-size:14px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 18px;margin-top:22px}.field label{display:block;font-size:14px;font-weight:650;margin-bottom:7px}.field input,.field select{width:100%;height:43px;border:1px solid #b9b9af;border-radius:6px;background:#fff;padding:8px 10px;color:var(--ink)}.field input[aria-invalid=true]{border-color:#a83228;background:#fff8f6}.help{font-size:12px;color:var(--muted);line-height:1.45;margin-top:7px}.error{font-size:12px;color:var(--red);min-height:0;margin-top:4px}.notice{padding:12px 14px;background:#f8f2e5;border-left:3px solid #aa7f24;font-size:13px;margin:18px 0 0}.aside{position:sticky;top:20px}.result{border-top:4px solid var(--red)}.tag{display:inline-block;font-size:12px;font-weight:750;letter-spacing:.3px;padding:5px 9px;border-radius:5px;background:#f0f0eb;margin:8px 0}.tag.fail{background:#fae9e5;color:#8c2921}.tag.unknown{background:#fbf1db;color:var(--amber)}.tag.pass{background:#e8f2eb;color:var(--green)}.result-title{font-size:25px;line-height:1.25;margin:10px 0}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.metric{padding:13px;background:#f5f5ef;border-radius:8px}.metric .name{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:22px;margin-top:5px;line-height:1.25}.metric .unit{font-size:12px;color:var(--muted)}.check{padding:10px 0;border-top:1px solid var(--line);font-size:13px}.check b{display:block;margin-bottom:3px}.check span{color:var(--muted)}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;margin-top:14px}th,td{padding:10px 8px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}.rollback{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}fieldset{min-width:0;margin:0;border:1px solid var(--line);border-radius:8px;padding:16px}legend{font-weight:700;font-size:15px;padding:0 5px}fieldset .field{margin:14px 0}details{border-top:1px solid var(--line);padding-top:15px;margin-top:16px}summary{font-weight:650;cursor:pointer;font-size:14px}pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;padding:14px;background:#f5f5ef;border-radius:7px;line-height:1.65}.definitions{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}.definitions p{font-size:13px;color:var(--muted)}.definitions b{color:var(--ink)}footer{font-size:12px;color:var(--muted);margin-top:22px}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #b44f40;outline-offset:3px}[hidden]{display:none!important}.privacy{font-size:12px;color:var(--muted);margin-top:22px}.live-note{font-size:12px;margin:4px 0;color:var(--muted)}@media(max-width:850px){.layout{grid-template-columns:1fr}.aside{position:static}.rollback{grid-template-columns:1fr}.aside{grid-row:1}}@media(max-width:520px){main{padding:24px 14px}.card{padding:19px}.fields,.definitions{grid-template-columns:1fr}header .bar{padding:16px}.toolbar{align-items:stretch}.tabs{width:100%}.tabs button{flex:1;padding:10px 12px}.metric strong{font-size:20px}}@media print{body{background:#fff}.aside{position:static}.layout{display:block}header,.toolbar,.privacy{display:none}.card{break-inside:avoid}.card input,.card select{border-color:#ccc}main{max-width:none;padding:0}details{display:block}footer{display:none}}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="brand">Ora<span>Matt</span></div><a href="https://oramatt.com/" target="_blank" rel="noopener">Database migration and modernization</a></div></header>
+<main>
+<div class="eyebrow">Database migration planning</div>
+<h1>Choose an approach that fits your requirements.</h1>
+<p class="intro">Start with a quick check of offline copy time. Then compare online migration and rollback using measured performance and confirmed capabilities.</p>
+<div class="toolbar"><div class="tabs" role="tablist" aria-label="Calculator model"><button id="simple-tab" role="tab" aria-selected="true" aria-controls="simple-panel">Simple model</button><button id="advanced-tab" role="tab" aria-selected="false" aria-controls="advanced-panel" tabindex="-1">Advanced model</button></div><div class="actions"><button id="example" type="button">Load example</button><button id="clear" type="button">Clear inputs</button><button id="print" type="button">Print results</button></div></div>
+<div class="layout">
+<div>
+<section class="card" aria-labelledby="common-heading"><div class="section-head"><span class="step">1</span><div><h2 id="common-heading">Enter the business requirements</h2><p class="caption">These values are shared by both models. Cutover means switching to the new database. Rollback means returning to the existing one.</p></div></div><div class="fields" id="common-fields"></div></section>
+<section id="simple-panel" class="card" role="tabpanel" aria-labelledby="simple-tab"><div class="section-head"><span class="step">2</span><div><h2>Estimate the full-copy interruption</h2><p class="caption">Could copying all the data fit within the allowed downtime? Enter explicit assumptions for the complete migration process.</p></div></div><div class="fields" id="simple-fields"></div><div class="notice">The Simple model screens offline migration. It does not establish online feasibility or verify rollback.</div><details><summary>How the Simple model works</summary><pre>Copy time = Data volume / Assumed bulk speed
+Offline downtime = (Copy time + Other cutover work) × Planning factor
+
+Time available for copying = Cutover budget / Planning factor - Other cutover work
+Required bulk speed = Data volume / Time available for copying
+
+If available time is zero or negative: revise the cutover plan.
+If estimated downtime fits: offline is a candidate.
+If it exceeds the limit: evaluate online or revise the inputs.
+Missing or invalid required inputs: unknown.</pre></details></section>
+<div id="advanced-panel" role="tabpanel" aria-labelledby="advanced-tab" hidden>
+<section class="card"><div class="section-head"><span class="step">2</span><div><h2>Evaluate cutover and change capture</h2><p class="caption">Change data capture (CDC) records new source changes and applies them to the target while the source stays in use.</p></div></div><div class="fields" id="advanced-fields"></div><div class="notice">Measure rates across the actual network and representative busy periods. Use comparable units for backlog size and change processing rates.</div></section>
+<section class="card"><div class="section-head"><span class="step">3</span><div><h2>Check the return-to-source plan</h2><p class="caption">After the target accepts writes, it may contain new data the source does not have. Define a separate recovery plan for each approach.</p></div></div><div class="rollback"><fieldset><legend>Offline recovery</legend><div id="offline-fields"></div></fieldset><fieldset><legend>Online recovery</legend><div id="online-fields"></div></fieldset></div><details><summary>How the Advanced model works</summary><pre>Offline downtime = (Data volume / Bulk speed + Other offline work) × Planning factor
+
+CDC spare capacity = CDC capacity - Source change rate
+CDC must have positive spare capacity to keep up and clear backlog.
+
+Online downtime = (Remaining source changes / CDC capacity + Other online work) × Planning factor
+
+Rollback downtime = (Target changes to restore / Restore speed + Other rollback work) × Planning factor
+When there are no target changes to restore, restoration time is zero.
+
+For each approach:
+• Cutover and rollback must fit their time budgets.
+• Expected data loss must not exceed the allowed limit.
+• Demonstrated rollback coverage must reach the required period.
+• Capabilities and a compatible recovery method must be confirmed.
+• Processing rates must be supported by representative measurements.
+
+Known failed requirement: not feasible under these inputs.
+Otherwise, missing evidence or assumed performance: unknown.
+All required checks pass with evidence: feasible.</pre></details></section>
+</div>
+<section class="card"><h2>Terms in plain language</h2><div class="definitions"><p><b>Bulk throughput:</b> data read from the source, moved and loaded into the target each minute. Network speed alone does not measure this.</p><p><b>Backlog:</b> changes still waiting to be processed. Include changes not yet captured, not only those in an apply queue.</p><p><b>Planning factor:</b> an allowance for uncertainty. A factor of 1.25 adds 25% to the entire estimated interruption.</p><p><b>Other operational work:</b> stopping writes, completing required readiness checks and switching the application. Include only work during the interruption.</p><p><b>Data-loss limit (RPO):</b> recovery point objective, expressed as minutes of recent committed activity that may be lost. Zero means no loss.</p><p><b>Rollback coverage:</b> how long after cutover the return-to-source procedure must remain available. It is separate from recovery duration.</p><p><b>Network latency:</b> round-trip delay, in milliseconds. Use it as a condition for throughput testing; it does not automatically determine transfer speed.</p><p><b>GB and minutes:</b> one gigabyte is one billion bytes; one terabyte is 1,000 GB. All time budgets here are in minutes.</p></div><details><summary>Scope and assumptions</summary><p class="caption">This models migration cutover and rollback. Ongoing replication additionally requires a target freshness or lag requirement. Online initial loading happens before the final outage; evaluate its duration, retained change logs and storage separately. If export, transfer and import are sequential, use a throughput measurement covering their combined duration. Schema conversion and application changes must also be ready.</p><p class="caption">Comparisons use full precision. Displayed results are rounded. Examples are planning illustrations, not vendor benchmarks.</p></details></section>
+</div>
+<aside class="aside"><section class="card result" aria-labelledby="result-heading"><div class="eyebrow">Your result</div><h2 id="result-heading">Offline screening</h2><div id="results"></div></section><p class="live-note" id="live-status" role="status" aria-live="polite" aria-atomic="true"></p><p class="privacy">Calculations run in your browser. This file does not send or save your input values and has no analytics or external code dependencies.</p></aside>
+</div>
+<footer>OraMatt Migration Decision Models · <a href="https://github.com/oramatt/migration_decision_models" target="_blank" rel="noopener">Project repository</a> · <a href="https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Introduction.Components.html" target="_blank" rel="noopener">Migration concepts</a>. Licensed under the Universal Permissive License (UPL), Version 1.0.</footer>
+</main>
+<noscript><p style="padding:24px">Enable JavaScript to use this calculator. All calculations run locally in your browser.</p></noscript>
+<script>
+'use strict';
+const fields={
+ common:[
+  ['preference','Preferred approach','select','Preference does not override the requirements.',['No preference','Offline','Online']],
+  ['data','Data to copy (GB)','number','Count the data being copied, not unused reserved storage.',0,true],
+  ['cutover','Maximum cutover interruption (minutes)','number','From stopping source writes until the target application is available.',0,true],
+  ['rollback','Maximum rollback interruption (minutes)','number','From beginning rollback until the source application is available.',0,false],
+  ['latency','Network round-trip delay (ms)','number','Use the stated network conditions to test the complete processing rate.',0,false],
+  ['factor','Planning factor','number','1.25 adds 25% to the estimated interruption; 1 adds no allowance.',1,false]
+ ],
+ simple:[
+  ['simpleSpeed','Assumed bulk speed (GB/minute)','number','Complete source reading, transfer and target loading speed.',0,true],
+  ['simpleWork','Other cutover work (minutes)','number','Stopping writes, checking readiness and switching connections.',0,false]
+ ],
+ advanced:[
+  ['bulk','Bulk speed (GB/minute)','number','Complete speed demonstrated by a representative migration test.',0,true],
+  ['change','Source change rate (GB/minute)','number','Change data generated during representative busy periods.',0,false],
+  ['cdc','CDC processing capacity (GB/minute)','number','Complete capture, transfer and apply capacity for comparable changes.',0,true],
+  ['backlog','Remaining source changes (GB)','number','Complete unapplied backlog at final write freeze, including uncaptured changes.',0,false],
+  ['offWork','Other offline cutover work (minutes)','number','Work during the outage outside copying the data.',0,false],
+  ['onWork','Other online cutover work (minutes)','number','Work during the outage outside applying remaining changes.',0,false],
+  ['offCap','Offline capabilities confirmed','select','Consistent copying, data coverage and application readiness.',['Unknown','Yes','No']],
+  ['onCap','Online capabilities confirmed','select','Initial loading, CDC coverage, log retention and application readiness.',['Unknown','Yes','No']],
+  ['evidence','Performance evidence','select','Select Measured only when tests support all relevant rates.',['Assumed','Measured','Unknown']]
+ ],
+ recovery:[
+  ['restore','Target changes to restore (GB)','number','Changes that must be preserved in the source for rollback.',0,false],
+  ['speed','Restore speed (GB/minute)','number','Not required when the restore volume is zero.',0,true],
+  ['work','Other rollback work (minutes)','number','Stop target writes, check the source and switch back.',0,false],
+  ['confirmed','Recovery method confirmed','select','A compatible, tested return-to-source procedure exists.',['Unknown','Yes','No']],
+  ['allowedLoss','Maximum allowed data loss (minutes)','number','Minutes of recent committed activity that may be lost. Zero means no loss.',0,false],
+  ['expectedLoss','Expected data loss (minutes)','number','Estimate from the recovery method, not the processing rate.',0,false],
+  ['requiredCoverage','Required rollback coverage (minutes)','number','How long after cutover rollback must remain possible.',0,false],
+  ['testedCoverage','Demonstrated rollback coverage (minutes)','number','How long the tested recovery plan remains available.',0,false]
+ ]
+};
+const example={preference:'No preference',data:1000,cutover:30,rollback:15,latency:40,factor:1.25,simpleSpeed:10,simpleWork:10,bulk:10,change:0.5,cdc:2,backlog:4,offWork:10,onWork:10,offCap:'Unknown',onCap:'Unknown',evidence:'Assumed'};
+for(const p of ['off','on'])Object.assign(example,{[p+'restore']:2,[p+'speed']:1,[p+'work']:6,[p+'confirmed']:'Unknown',[p+'allowedLoss']:0,[p+'expectedLoss']:0,[p+'requiredCoverage']:120,[p+'testedCoverage']:120});
+const definitions={};let mode='simple';let announceTimer;
+function addFields(group,target,prefix=''){
+ const parent=document.getElementById(target);
+ for(const d of fields[group]){
+  const [key,label,type,help,options,strict]=d,id=prefix+key;definitions[id]={type,min:type==='number'?options:null,strict,label};
+  const wrap=document.createElement('div');wrap.className='field';
+  const lab=document.createElement('label');lab.htmlFor=id;lab.textContent=label;wrap.append(lab);
+  const input=document.createElement(type==='select'?'select':'input');input.id=id;
+  if(type==='select')for(const value of options){const opt=document.createElement('option');opt.value=value;opt.textContent=value;input.append(opt);}
+  else{input.type='number';input.step='any';input.min=String(options);input.inputMode='decimal';}
+  input.setAttribute('aria-describedby',id+'-help '+id+'-error');wrap.append(input);
+  const note=document.createElement('div');note.className='help';note.id=id+'-help';note.textContent=help;wrap.append(note);
+  const err=document.createElement('div');err.className='error';err.id=id+'-error';wrap.append(err);parent.append(wrap);
+ }
+}
+addFields('common','common-fields');addFields('simple','simple-fields');addFields('advanced','advanced-fields');addFields('recovery','offline-fields','off');addFields('recovery','online-fields','on');
+function read(){const x={};for(const [id,d] of Object.entries(definitions)){const e=document.getElementById(id);x[id]=d.type==='number'?(e.value.trim()===''?null:Number(e.value)):e.value;}return x;}
+function good(v,min=0,strict=false){return typeof v==='number'&&Number.isFinite(v)&&(strict?v>min:v>=min);}
+function finite(v){return typeof v==='number'&&Number.isFinite(v)?v:null;}
+function calc(x){
+ const c={};c.common=good(x.data,0,true)&&good(x.cutover,0,true)&&good(x.rollback)&&good(x.latency)&&good(x.factor,1)&&['No preference','Offline','Online'].includes(x.preference);
+ c.available=good(x.cutover,0,true)&&good(x.factor,1)&&good(x.simpleWork)?finite(x.cutover/x.factor-x.simpleWork):null;
+ c.required=good(x.data,0,true)&&good(c.available,0,true)?finite(x.data/c.available):null;
+ c.copy=good(x.data,0,true)&&good(x.simpleSpeed,0,true)?finite(x.data/x.simpleSpeed):null;
+ c.simpleTime=good(c.copy)&&good(x.simpleWork)&&good(x.factor,1)?finite((c.copy+x.simpleWork)*x.factor):null;
+ c.simple=!c.common||!good(x.simpleSpeed,0,true)||!good(x.simpleWork)||c.simpleTime===null||c.available===null?'Unknown':c.available<=0?'Revise cutover plan':c.simpleTime<=x.cutover?'Offline candidate':'Evaluate online';
+ c.fullCopy=good(x.data,0,true)&&good(x.bulk,0,true)?finite(x.data/x.bulk):null;
+ c.offTime=good(c.fullCopy)&&good(x.offWork)&&good(x.factor,1)?finite((c.fullCopy+x.offWork)*x.factor):null;
+ c.spare=good(x.cdc,0,true)&&good(x.change)?finite(x.cdc-x.change):null;
+ c.capacity=c.spare===null?'Unknown':c.spare>0?'Pass':'Not feasible';
+ c.drain=good(x.backlog)&&good(x.cdc,0,true)?finite(x.backlog/x.cdc):null;
+ c.onTime=good(c.drain)&&good(x.onWork)&&good(x.factor,1)?finite((c.drain+x.onWork)*x.factor):null;
+ c.catchup=good(x.backlog)&&good(c.spare,0,true)?finite(x.backlog/c.spare):null;
+ function limit(time,budget,positive=false){return good(time)&&good(budget,0,positive)?time<=budget?'Pass':'Not feasible':'Unknown';}
+ c.offCut=limit(c.offTime,x.cutover,true);const timing=limit(c.onTime,x.cutover,true);
+ c.onCut=c.capacity==='Not feasible'||timing==='Not feasible'?'Not feasible':c.capacity==='Pass'&&timing==='Pass'?'Pass':'Unknown';
+ c.recovery={};
+ for(const p of ['off','on']){
+  const volume=x[p+'restore'],speed=x[p+'speed'],other=x[p+'work'];
+  const restore=good(volume)?volume===0?0:good(speed,0,true)?finite(volume/speed):null:null;
+  const time=good(restore)&&good(other)&&good(x.factor,1)?finite((restore+other)*x.factor):null;
+  const loss=good(x[p+'expectedLoss'])&&good(x[p+'allowedLoss'])?x[p+'expectedLoss']<=x[p+'allowedLoss']?'Pass':'Not feasible':'Unknown';
+  const coverage=good(x[p+'testedCoverage'])&&good(x[p+'requiredCoverage'])?x[p+'testedCoverage']>=x[p+'requiredCoverage']?'Pass':'Not feasible':'Unknown';
+  const t=limit(time,x.rollback),confirmed=x[p+'confirmed'];
+  const status=confirmed==='No'||[loss,coverage,t].includes('Not feasible')?'Not feasible':confirmed==='Yes'&&[loss,coverage,t].every(v=>v==='Pass')?'Pass':'Unknown';
+  c.recovery[p]={restore,time,loss,coverage,timing:t,status};
+  const cap=x[p+'Cap'],cut=c[p+'Cut'];
+  c[p+'Status']=cap==='No'||cut==='Not feasible'||status==='Not feasible'?'Not feasible':c.common&&cap==='Yes'&&cut==='Pass'&&status==='Pass'&&x.evidence==='Measured'?'Feasible':'Unknown';
+ }
+ c.decision=c.offStatus==='Feasible'&&c.onStatus==='Feasible'?'Compare both approaches':c.offStatus==='Feasible'&&c.onStatus==='Not feasible'?'Choose offline':c.offStatus==='Not feasible'&&c.onStatus==='Feasible'?'Choose online':c.offStatus==='Not feasible'&&c.onStatus==='Not feasible'?'Revise migration plan':'Resolve unknown checks';
+ return c;
+}
+const fmt=v=>v===null||v===undefined?'Not available':new Intl.NumberFormat(undefined,{maximumFractionDigits:2}).format(v);
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
+function badge(text){return el('span','tag '+(text==='Not feasible'||text.startsWith('Revise')?'fail':text==='Unknown'?'unknown':text==='Feasible'?'pass':''),text);}
+function metric(parent,label,value,unit){const box=el('div','metric');box.append(el('div','name',label),el('strong','',fmt(value)),el('div','unit',unit));parent.append(box);}
+function check(parent,label,state,detail){const n=el('div','check');n.append(el('b','',label+' — '+state),el('span','',detail));parent.append(n);}
+function validate(x){
+ const active=[...fields.common.map(d=>d[0]),...(mode==='simple'?fields.simple.map(d=>d[0]):[...fields.advanced.map(d=>d[0]),...['off','on'].flatMap(p=>fields.recovery.map(d=>p+d[0]))])];
+ for(const [id,d] of Object.entries(definitions)){
+  const input=document.getElementById(id),err=document.getElementById(id+'-error');let message='';
+  const optional=(id==='offspeed'&&x.offrestore===0)||(id==='onspeed'&&x.onrestore===0);
+  if(active.includes(id)&&d.type==='number'&&!optional){if(x[id]===null)message='Enter a value, or leave unknown for an incomplete assessment.';else if(!good(x[id],d.min,d.strict))message=d.strict?'Enter a number greater than '+d.min+'.':'Enter a number of '+d.min+' or greater.';}
+  err.textContent=message;input.setAttribute('aria-invalid',message?'true':'false');
+ }
+}
+function render(){
+ const x=read(),c=calc(x);validate(x);const out=document.getElementById('results');out.replaceChildren();document.getElementById('result-heading').textContent=mode==='simple'?'Offline screening':'Migration and recovery';
+ if(mode==='simple'){
+  out.append(badge(c.simple),el('h3','result-title',c.simple));
+  const desc={Unknown:'Complete the missing or invalid requirements and assumptions.', 'Revise cutover plan':'Other cutover work leaves no time for the full copy under the planning allowance. Review the work or time budget.', 'Offline candidate':'Offline fits the assumed bulk speed. Demonstrate that speed and verify rollback before selecting a tool.', 'Evaluate online':'Offline exceeds the cutover limit at this speed. Evaluate CDC and recovery with the Advanced model, or revise the plan.'};out.append(el('p','caption',desc[c.simple]));
+  const metrics=el('div','metrics');metric(metrics,'Offline interruption',c.simpleTime,'minutes');metric(metrics,'Cutover limit',good(x.cutover,0,true)?x.cutover:null,'minutes');metric(metrics,'Required bulk speed',c.required,'GB/minute');metric(metrics,'Full-copy time',c.copy,'minutes');out.append(metrics);
+  check(out,'Rollback','Not assessed',good(x.rollback)?'Recovery must still be demonstrated within '+fmt(x.rollback)+' minutes.':'Enter the recovery interruption limit.');
+  check(out,'Network condition',good(x.latency)?fmt(x.latency)+' ms':'Unknown','Measure throughput across the stated round-trip delay. No automatic latency penalty is applied.');
+ }else{
+  out.append(el('h3','result-title',c.decision),el('p','caption','Results are conditional on these inputs. Example assumptions do not establish a proven migration plan.'));
+  const wrap=el('div','table-wrap'),table=el('table');const head=el('thead'),hr=el('tr');for(const v of ['Check','Offline','Online'])hr.append(el('th','',v));head.append(hr);table.append(head);const body=el('tbody');
+  const rows=[['Overall',c.offStatus,c.onStatus],['Cutover time',fmt(c.offTime)+' min',fmt(c.onTime)+' min'],['Cutover check',c.offCut,c.onCut],['Rollback time',fmt(c.recovery.off.time)+' min',fmt(c.recovery.on.time)+' min'],['Rollback check',c.recovery.off.status,c.recovery.on.status],['Allowed data loss',c.recovery.off.loss,c.recovery.on.loss],['Coverage period',c.recovery.off.coverage,c.recovery.on.coverage]];
+  for(const r of rows){const tr=el('tr');tr.append(el('th','',r[0]));for(const value of r.slice(1)){const td=el('td');td.append(['Feasible','Not feasible','Unknown'].includes(value)?badge(value):el('span','',value));tr.append(td);}body.append(tr);}table.append(body);wrap.append(table);out.append(wrap);
+  const metrics=el('div','metrics');metric(metrics,'CDC spare capacity',c.spare,'GB/minute');metric(metrics,'Final source changes',c.drain,'minutes to apply');out.append(metrics);
+  check(out,'Can CDC keep up?',c.capacity,'Capacity must exceed the source change rate.');
+  check(out,'Performance evidence',x.evidence==='Measured'?'Confirmed as measured':'Unknown',x.evidence==='Measured'?'Your selection asserts that representative tests support the inputs.':'Representative measurements are required for an overall Feasible result.');
+  check(out,'Offline capabilities',x.offCap,'Confirm the required data copying and application readiness.');check(out,'Online capabilities',x.onCap,'Confirm initial loading, CDC coverage, retention and application readiness.');
+  for(const p of ['off','on'])check(out,(p==='off'?'Offline':'Online')+' recovery method',x[p+'confirmed'],'A compatible, tested return-to-source procedure is required.');
+  const details=el('details'),summary=el('summary','', 'See additional timing calculations');details.append(summary,el('p','caption','Initial full-copy time: '+fmt(c.fullCopy)+' minutes. The online initial copy precedes the final outage.'),el('p','caption','Catch-up for this backlog size while writes continue: '+fmt(c.catchup)+' minutes, assuming steady rates and positive spare capacity.'));out.append(details);
+  if(!c.common)check(out,'Shared requirements','Unknown','Complete valid business requirements at the top of the form.');
+ }
+ if(x.preference!=='No preference')out.append(el('p','caption','Your preference: '+x.preference+'. The preference does not override failed or unknown checks.'));
+ clearTimeout(announceTimer);announceTimer=setTimeout(()=>document.getElementById('live-status').textContent=mode==='simple'?'Simple result: '+c.simple+'.':'Advanced result: '+c.decision+'. Offline '+c.offStatus+'. Online '+c.onStatus+'.',350);
+}
+function setMode(value){mode=value;for(const m of ['simple','advanced']){const b=document.getElementById(m+'-tab');b.setAttribute('aria-selected',m===mode?'true':'false');b.tabIndex=m===mode?0:-1;document.getElementById(m+'-panel').hidden=m!==mode;}render();}
+function fill(values){for(const [id,d] of Object.entries(definitions)){const input=document.getElementById(id);input.value=values[id]??(d.type==='select'?(id==='preference'?'No preference':id==='evidence'?'Unknown':'Unknown'):'');}render();}
+document.getElementById('simple-tab').addEventListener('click',()=>setMode('simple'));document.getElementById('advanced-tab').addEventListener('click',()=>setMode('advanced'));
+document.querySelector('.tabs').addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();setMode(e.key==='Home'?'simple':e.key==='End'?'advanced':mode==='simple'?'advanced':'simple');document.getElementById(mode+'-tab').focus();}});
+document.querySelector('main').addEventListener('input',e=>{if(e.target.matches('input,select'))render();});document.querySelector('main').addEventListener('change',e=>{if(e.target.matches('select'))render();});
+document.getElementById('example').addEventListener('click',()=>fill(example));document.getElementById('clear').addEventListener('click',()=>fill({}));document.getElementById('print').addEventListener('click',()=>window.print());
+fill(example);
+</script>
+</body>
+</html>
