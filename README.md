@@ -14,6 +14,11 @@ The models help identify a suitable migration approach. Selecting a specific too
 | [OraMatt_Migration_Decision_Models.xlsx](OraMatt_Migration_Decision_Models.xlsx) | Companion spreadsheet for working through the decision models. |
 | [LICENSE](LICENSE) | Universal Permissive License (UPL), Version 1.0. |
 
+## Video walkthrough
+https://github.com/oramatt/migration_decision_models/blob/main/Database_Migration_Calculator_Walkthrough.mp4
+
+A walkthrough of the Simple and Advanced migration decision models.
+
 ## Run the calculator
 Available online ==> **https://oramatt.github.io/migration_decision_models/**
 
