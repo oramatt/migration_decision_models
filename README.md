@@ -145,22 +145,11 @@ Known failures take priority over unknown checks. Assumed performance alone does
 | Revise migration plan | Both approaches are not feasible under the inputs. |
 | Resolve unknown checks | At least one approach still needs evidence or valid inputs before completing the comparison. |
 
-## Host with GitHub Pages
+## Hosted on GitHub Pages
 
-Keep `index.html` in the repository root, then:
-
-1. Open the repository's **Settings â†’ Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select **main** and **/(root)**, then select **Save**.
-4. Wait for the deployment to finish and use the site address shown by GitHub.
-
-The expected project address is:
+The project address is:
 
 **https://oramatt.github.io/migration_decision_models/**
-
-See [GitHub's publishing-source instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-For OraMatt.com, link to the hosted calculator or embed its URL in an iframe if the WordPress configuration permits it. The complete HTML file is designed to be served as a page; pasting it into a WordPress post editor may remove its scripts or styling.
 
 ## Assumptions and interpretation
 
