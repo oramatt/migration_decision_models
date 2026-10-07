@@ -17,6 +17,7 @@ The models help identify a suitable migration approach. Selecting a specific too
 ## Run the calculator
 
 Download `index.html` and open it in a modern browser. No installation, server, build process, or internet connection is needed for the calculations.
+Available online as well here ==> **https://oramatt.github.io/migration_decision_models/**
 
 1. Choose **Simple model** or **Advanced model**.
 2. Enter your business requirements and processing rates.
