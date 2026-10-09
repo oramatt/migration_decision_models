@@ -170,8 +170,8 @@ function validate(x){
 function render(){
  const x=read(),c=calc(x);validate(x);const out=document.getElementById('results');out.replaceChildren();document.getElementById('result-heading').textContent=mode==='simple'?'Offline screening':'Migration and recovery';
  if(mode==='simple'){
-  out.append(badge(c.simple),el('h3','result-title',c.simple));
-  const desc={Unknown:'Complete the missing or invalid requirements and assumptions.', 'Revise cutover plan':'Other cutover work leaves no time for the full copy under the planning allowance. Review the work or time budget.', 'Offline candidate':'Offline fits the assumed bulk speed. Demonstrate that speed and verify rollback before selecting a tool.', 'Evaluate online':'Offline exceeds the cutover limit at this speed. Evaluate CDC and recovery with the Advanced model, or revise the plan.'};out.append(el('p','caption',desc[c.simple]));
+  out.append(el('h3','result-title',c.simple));
+  const desc={Unknown:'Complete the missing or invalid requirements and assumptions.', 'Revise cutover plan':'Other cutover work leaves no time for the full copy under the planning allowance. Review the work or time budget.', '1 Offline candidate':'Offline fits the assumed bulk speed. Demonstrate that speed and verify rollback before selecting a tool.', 'Evaluate online':'Offline exceeds the cutover limit at this speed. Evaluate CDC and recovery with the Advanced model, or revise the plan.'};out.append(el('p','caption',desc[c.simple]));
   const metrics=el('div','metrics');metric(metrics,'Offline interruption',c.simpleTime,'minutes');metric(metrics,'Cutover limit',good(x.cutover,0,true)?x.cutover:null,'minutes');metric(metrics,'Required bulk speed',c.required,'GB/minute');metric(metrics,'Full-copy time',c.copy,'minutes');out.append(metrics);
   check(out,'Rollback','Not assessed',good(x.rollback)?'Recovery must still be demonstrated within '+fmt(x.rollback)+' minutes.':'Enter the recovery interruption limit.');
   check(out,'Network condition',good(x.latency)?fmt(x.latency)+' ms':'Unknown','Measure throughput across the stated round-trip delay. No automatic latency penalty is applied.');
