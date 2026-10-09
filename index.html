@@ -126,7 +126,7 @@ function calc(x){
  c.required=good(x.data,0,true)&&good(c.available,0,true)?finite(x.data/c.available):null;
  c.copy=good(x.data,0,true)&&good(x.simpleSpeed,0,true)?finite(x.data/x.simpleSpeed):null;
  c.simpleTime=good(c.copy)&&good(x.simpleWork)&&good(x.factor,1)?finite((c.copy+x.simpleWork)*x.factor):null;
- c.simple=!c.common||!good(x.simpleSpeed,0,true)||!good(x.simpleWork)||c.simpleTime===null||c.available===null?'Unknown':c.available<=0?'Revise cutover plan':c.simpleTime<=x.cutover?'Offline candidate':'Evaluate online';
+ c.simple=!c.common||!good(x.simpleSpeed,0,true)||!good(x.simpleWork)||c.simpleTime===null||c.available===null?'Unknown':c.available<=0?'Revise cutover plan':c.simpleTime<=x.cutover?'Offline Candidate Option':'Evaluate Online Options';
  c.fullCopy=good(x.data,0,true)&&good(x.bulk,0,true)?finite(x.data/x.bulk):null;
  c.offTime=good(c.fullCopy)&&good(x.offWork)&&good(x.factor,1)?finite((c.fullCopy+x.offWork)*x.factor):null;
  c.spare=good(x.cdc,0,true)&&good(x.change)?finite(x.cdc-x.change):null;
